@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSmart Waste Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+        background: linear-gradient(to bottom right, #4e52a6, #d9e2ec); /* Customize as needed */
+         background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    }
+        .hero-section {
+            background-color: #333; /* Fallback dark gray */
+            /*background-image: url('https://placehold.co/1920x1080/000000/FFFFFF/png?text=Waste+Management+Background');*/ /* Placeholder background image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: rgb(255, 255, 255);
+            position: relative; /* Needed for overlay */
+            overflow: hidden; /* Ensure content stays within bounds */
+        }
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2; /* Ensure content is above the overlay */
+        }
+        .feature-card {
+            min-height: 250px; /* Ensure cards have a consistent height */
+        }
+        .icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px; /* Tailwind's w-12 */
+            height: 48px; /* Tailwind's h-12 */
+            border-radius: 9999px; /* Tailwind's rounded-full */
+            background-color: #f3f4f6; /* Tailwind's bg-gray-100 */
+            color: #4b5563; /* Tailwind's text-gray-700 */
+            font-size: 1.5rem; /* Equivalent to text-2xl */
+        }
+
+        /* Custom styles for animations and responsiveness */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Scroll-based animation trigger */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .scroll-animate.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Small icon styles for contact section (using Font Awesome now) */
+        .contact-card .icon i {
+            font-size: 2.5rem; /* Larger icons */
+            color: #000000; /* Black color for icons */
+            margin-bottom: 0.5rem;
+        }
+        /* Navigation link hover effect (already handled by Tailwind but good to be explicit) */
+        .main-nav-link:hover {
+            color: #4f46e5; /* Tailwind indigo-600 */
+            /* Add any other hover styles like transform, etc. */
+            transform: translateY(-2px);
+            transition: transform 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm py-4 sticky top-0 z-50">
+  <nav class="container mx-auto px-4 flex justify-between items-center">
+    <!-- Logo + Branding -->
+    <div class="flex items-center space-x-3">
+      <img src="images/logo.png" alt="EcoSmart Logo" class="w-20 h-20 object-contain">
+      <div class="text-2xl font-bold text-gray-800">EcoSmart Waste Management Portal</div>
+    </div>
+            <ul class="hidden md:flex space-x-6">
+                <li><a href="#hero" class="text-gray-600 hover:text-indigo-600 font-medium rounded-md px-3 py-2 transition duration-300 main-nav-link">Home</a></li>
+                <li><a href="#about-us" class="text-gray-600 hover:text-indigo-600 font-medium rounded-md px-3 py-2 transition duration-300 main-nav-link">About Us</a></li>
+                <li><a href="#features-smooth-nav" class="text-gray-600 hover:text-indigo-600 font-medium rounded-md px-3 py-2 transition duration-300 main-nav-link">Features</a></li>
+                <li><a href="#our-services" class="text-gray-600 hover:text-indigo-600 font-medium rounded-md px-3 py-2 transition duration-300 main-nav-link">Our Services</a></li>
+                <li><a href="#awareness-tips" class="text-gray-600 hover:text-indigo-600 font-medium rounded-md px-3 py-2 transition duration-300 main-nav-link">Awareness & Tips</a></li>
+                <li><a href="#get-in-touch" class="text-gray-600 hover:text-indigo-600 font-medium rounded-md px-3 py-2 transition duration-300 main-nav-link">Contact Us</a></li>
+            </ul>
+            <!-- Removed 'Join' button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white mt-2 py-2 shadow-lg rounded-lg">
+            <a href="#hero" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Home</a>
+            <a href="#about-us" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">About Us</a>
+            <a href="#features-smooth-nav" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Features</a>
+            <a href="#our-services" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Our Services</a>
+            <a href="#awareness-tips" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Awareness & Tips</a>
+            <a href="#get-in-touch" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Contact Us</a>
+            <!-- Removed 'Join' button from mobile menu -->
+        </div>
+    </header>
+
+    <!-- Hero Section (Page 1 resemblance) -->
+    <section id="hero" class="hero-section relative py-16 md:py-24 lg:py-32 rounded-b-lg mb-8 overflow-hidden">
+    <!-- Background Image with Blur -->
+    <div class="absolute inset-0 bg-cover bg-center z-0 blur-sm opacity-60" style="background-image: url('images/bg_img_for_1stslide.jpg');"></div>
+
+    <!-- Content -->
+    <div class="container mx-auto px-4 flex flex-col items-center justify-center h-full text-center hero-content relative z-10">
+        <div class="md:w-3/4 lg:w-2/3 animate-fade-in">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 text-white">
+                Welcome to EcoSmart Waste Management Portal
+            </h1>
+            <p class="text-lg md:text-xl leading-relaxed mb-6 text-white">
+                EcoSmart Waste Portal helps individuals and communities learn how to manage waste responsibly through technology, education, and interactive tools. From identifying waste types to chatting with our Eco Bot, we're making waste disposal smarter, cleaner, and more efficient.
+            </p>
+        </div>
+    </div>
+</section>
+
+
+  <!-- Seamless Navigation & Engaging Animations (Page 1 resemblance) -->
+<section id="about-us" class="py-12 md:py-16 bg-white/40 backdrop-blur-md rounded-lg">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-8">
+        <!-- Left Side: Text -->
+        <div class="md:w-1/2 text-center md:text-left">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">About</h2>
+            <p class="text-lg text-gray-700 mb-6">
+                <strong>EcoSmart Waste Portal</strong> is an interactive platform designed to simplify and promote effective waste management practices. 
+                It leverages AI and digital tools to help users:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 mb-6 space-y-2">
+                <li>Understand and learn proper waste segregation</li>
+                <li>Predict waste type using image recognition</li>
+                <li>Identify the correct waste category instantly</li>
+                <li>Engage through quizzes to boost awareness</li>
+                <li>File complaints about waste issues</li>
+                <li>Get instant help via the Eco Bot chat assistant</li>
+            </ul>
+            <p class="text-lg text-gray-700">
+                Our goal is to make waste management easy, educational, and accessible to all.
+            </p>
+        </div>
+
+        <!-- Right Side: Image or Illustration -->
+       <div class="md:w-1/2 flex justify-center items-center bg-gray-200 rounded-lg shadow-lg overflow-hidden p-4">
+    <img src="images/about_image.jpg" alt="EcoSmart Illustration" class="max-w-[10%] h-auto object-contain">
+</div>
+
+</section>
+
+
+<!-- Unlock Potential with Innovative Solutions (Page 2 resemblance) -->
+<section id="features-smooth-nav" class="py-12 md:py-16 bg-gray-50 rounded-lg shadow-sm mb-8 scroll-animate">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-8">
+        <!-- Left Side: Text -->
+        <div class="md:w-1/2 text-center md:text-left">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Features</h2>
+            <p class="text-gray-600 leading-relaxed mb-6 font-semibold">
+                Key Features of EcoSmart Waste Portal:
+            </p>
+            <ul class="space-y-4 text-gray-700 list-disc list-inside">
+                <li>♻️ Smart Waste Segregation Guide – Know what to throw where with category-wise sorting info.</li>
+                <li>🗑️ Scheduled Waste Pickups – Book or track door-to-door collection services in your area.</li>
+                <li>📊 Waste Tracking Dashboard – Monitor your waste output and recycling progress.</li>
+                <li>📍 Nearby Recycling Points – Find the closest recycling centers, compost units, or drop-off points.</li>
+                <li>📢 Report Waste Issues – Notify authorities about illegal dumping or unattended garbage.</li>
+                <li>🧠 Educational Resources – Access articles, videos, and guidelines on responsible waste habits.</li>
+            </ul>
+        </div>
+
+        <!-- Right Side: Image -->
+        <div class="md:w-1/2 flex justify-center items-center bg-gray-200 rounded-lg shadow-lg overflow-hidden p-4">
+            <img src="images/features_image.jpg" alt="EcoSmart Features Illustration" class="max-w-[80%] h-auto object-contain" />
+        </div>
+    </div>
+</section>
+
+
+    <!-- Feature Cards Section (Page 2 & 3 resemblance - Now 6 cards) -->
+    <section id="our-services" class="py-12 md:py-16 bg-white/40 backdrop-blur-md rounded-lg">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+    <!-- Feature Card 1 -->
+    <a href="http://localhost/Main_Page/Learn_Waste_Segregation/LearnWasteSegregation.html" class="transform transition duration-300 hover:scale-105 hover:shadow-xl">
+      <div class="bg-gray-100 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+        <img src="images/Learn_waste_segregation_logo.png" alt="Feature 1" class="w-32 h-32 rounded-lg object-cover mb-4" />
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">Learn Waste Segregation</h3>
+        <p class="text-gray-600 text-sm mb-4">Understand the types of waste and how to manage them.</p>
+        <span class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center group">
+          Try Now
+          <svg class="w-4 h-4 ml-1 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Feature Card 2 -->
+    <a href="http://localhost/Main_Page/Image_predict/image_predict.html" class="transform transition duration-300 hover:scale-105 hover:shadow-xl">
+      <div class="bg-gray-100 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+        <img src="images/image_predict_logo.png" alt="Feature 2" class="w-32 h-32 rounded-lg object-cover mb-4" />
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">Waste Image Prediction</h3>
+        <p class="text-gray-600 text-sm mb-4">Upload waste image and let AI tell what it is.</p>
+        <span class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center group">
+          Try Now
+          <svg class="w-4 h-4 ml-1 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Feature Card 3 -->
+    <a href="http://localhost/Main_Page/Waste_category_identifer/Wastecategoryidentifer.html" class="transform transition duration-300 hover:scale-105 hover:shadow-xl">
+      <div class="bg-gray-100 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+        <img src="images/Waste_category_logo.png" alt="Feature 3" class="w-50 h-32 rounded-lg object-cover mb-4" />
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">Waste Category Identifier</h3>
+        <p class="text-gray-600 text-sm mb-4">Know whether it's Wet, Dry, Hazardous, or Recyclable.</p>
+        <span class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center group">
+          Try Now
+          <svg class="w-4 h-4 ml-1 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Feature Card 4 -->
+    <a href="http://localhost/Main_Page/quiz_game/quiz.html" class="transform transition duration-300 hover:scale-105 hover:shadow-xl">
+      <div class="bg-gray-100 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+        <img src="images/quiz_logo.png" alt="Workflow Integration" class="w-32 h-32 rounded-lg object-cover mb-4" />
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">Quiz on Waste</h3>
+        <p class="text-gray-600 text-sm mb-4">Test your knowledge about waste management</p>
+        <span class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center group">
+          Try Now
+          <svg class="w-4 h-4 ml-1 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Feature Card 5 -->
+    <a href="http://localhost/Main_Page/register_complaint/Register_complaint.html" class="transform transition duration-300 hover:scale-105 hover:shadow-xl">
+      <div class="bg-gray-100 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+        <img src="images/Register_complaint_logo.png" alt="Data Analytics" class="w-32 h-32 rounded-lg object-cover mb-4" />
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">Register Complaint</h3>
+        <p class="text-gray-600 text-sm mb-4">Lodge complaints and help optimize collection of waste</p>
+        <span class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center group">
+        Try Now
+          <svg class="w-4 h-4 ml-1 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Feature Card 6 -->
+    <a href="http://localhost/Main_Page/Chatbot/chatbot.html" class="transform transition duration-300 hover:scale-105 hover:shadow-xl">
+      <div class="bg-gray-100 p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+        <img src="images/chat_bot_logo.png" alt="Support" class="w-32 h-32 rounded-lg object-cover mb-4" />
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">Chat with EcoBot</h3>
+        <p class="text-gray-600 text-sm mb-4">sk questions about waste and get instant help.</p>
+        <span class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center group">
+          Try Now
+          <svg class="w-4 h-4 ml-1 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+
+    <!-- Discover Transformative Benefits (Page 3 resemblance) -->
+<section id="awareness-tips" class="py-12 md:py-16 bg-gray-50 rounded-lg shadow-sm mb-8 scroll-animate">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-8">
+        
+        <!-- Left Side: Image -->
+        <div class="md:w-1/2 flex justify-center items-center bg-gray-200 rounded-lg shadow-lg overflow-hidden p-4">
+            <img src="images/awareness_img.png" alt="Awareness and Tips" class="max-w-[80%] h-auto object-contain">
+        </div>
+
+        <!-- Right Side: Text -->
+        <div class="md:w-1/2 text-center md:text-left">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Awareness and Tips</h2>
+            <p class="text-gray-600 leading-relaxed mb-4 font-semibold">Awareness & Smart Waste Tips</p>
+            <ul class="space-y-4 text-gray-700 list-disc list-inside">
+                <li>🚮 <strong>Know Your Waste:</strong> Use our tools to identify and dispose of waste correctly</li>
+                <li>🧹 <strong>Segregate Daily:</strong> Separate wet, dry, and hazardous waste at the source</li>
+                <li>🧴 <strong>Clean Before You Recycle:</strong> Rinse recyclables to avoid contamination</li>
+                <li>💡 <strong>Learn & Share:</strong> Take our quizzes and share what you learn with your family</li>
+                <li>🤖 <strong>Use Eco Bot:</strong> Stuck with a waste issue? Chat with Eco Bot for instant guidance</li>
+                <li>📢 <strong>Be a Waste Warrior:</strong> Report dumping or collection issues through our complaint tool</li>
+            </ul>
+            <p class="text-lg text-gray-700 mt-6 font-semibold">
+                Let’s make waste management smarter – together!
+            </p>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Get in Touch Section (Updated) -->
+    <section id="get-in-touch" class="py-12 md:py-16 bg-white/40 backdrop-blur-md rounded-lg">
+        <div class="container mx-auto px-4">
+ <div class="container mx-auto px-4 text-center">
+    <div class="text-gray-900 font-semibold uppercase tracking-wide mb-2">Connect</div>
+    <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Get In Touch</h2>
+    <div class="text-gray-600 text-lg mb-10 max-w-2xl mx-auto">We're here to answer your questions and assist you.</div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Email Card -->
+                <div class="p-6 rounded-lg bg-gray-100 flex flex-col items-center shadow-md contact-card">
+                    <div class="icon"><i class="fas fa-envelope"></i></div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Email</h3>
+                    <p class="text-gray-600 text-sm mb-2">Reach us anytime at the email below for inquiries.</p>
+                    <a href="mailto:info@viewcompany.com" class="text-gray-900 hover:underline">info@viewcompany.com</a>
+                </div>
+                <!-- Phone Card -->
+                <div class="p-6 rounded-lg bg-gray-100 flex flex-col items-center shadow-md contact-card">
+                    <div class="icon"><i class="fas fa-phone-alt"></i></div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Phone</h3>
+                    <p class="text-gray-600 text-sm mb-2">Call us for immediate assistance or support.</p>
+                    <a href="tel:+91 9012873456" class="text-gray-900 hover:underline">+91 9012873456</a>
+                </div>
+                <!-- Office Card -->
+                <div class="p-6 rounded-lg bg-gray-100 flex flex-col items-center shadow-md contact-card">
+                    <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Office</h3>
+                    <p class="text-gray-600 text-sm mb-2">Visit us at our headquarters for face-to-face support.</p>
+                    <a href="https://www.google.com/maps/place/Vignan's+Institute+of+Engineering+for+Women/@17.7162534,83.1740564,16.83z/data=!4m6!3m5!1s0x3a3968b80a531cb7:0xe76b039512ff9e79!8m2!3d17.7164375!4d83.1768125!16s%2Fg%2F1vg6s4mx?entry=ttu&g_ep=EgoyMDI1MDYyMy4yIKXMDSoASAFQAw%3D%3D" target="_blank" class="text-gray-900 hover:underline">Vignan's Institute of Engineering for Women</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    // Optionally, stop observing once visible
+                    // observer.unobserve(entry.target);
+                } else {
+                    // Optional: remove is-visible class if you want animations to re-trigger on scroll back up
+                    // entry.target.classList.remove('is-visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animate').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    // Adjust scroll position to account for fixed header, if needed
+                    const headerOffset = document.querySelector('header').offsetHeight;
+                    const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Close mobile menu after clicking a link
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

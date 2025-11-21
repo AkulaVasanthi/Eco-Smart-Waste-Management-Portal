@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      background-color: #1a1a2e;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+    }
+
+    .left {
+      flex: 1;
+      background: linear-gradient(135deg, #2e2e9d, #ffffff);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .left h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .left h2 {
+      font-size: 20px;
+      font-weight: normal;
+      color: #dddddd;
+    }
+
+    .right {
+      flex: 1;
+      background-color: #ffffff;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+      color: #000000;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #ffffff;
+      color: #000000;
+      font-size: 16px;
+      transition: border 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border: 1px solid #000000;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #6c63ff;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #5848f8;
+    }
+
+    .login-link {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .login-link a {
+      color: #3c78da;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <h1>Welcome!</h1>
+      <h2>Create your account and join our community</h2>
+    </div>
+    <div class="right">
+      <div class="form-container">
+        <h1>Create an account</h1>
+        
+        <form action="create_account.php" method="POST">
+  <input type="text" name="username" placeholder="Username" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <input type="password" name="password" placeholder="Password" required>
+  <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+  <button class="btn" type="submit">Create Account</button>
+</form>
+
+        <div class="login-link">
+          Already have an account? <a href="Login_Page.html">Log in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
