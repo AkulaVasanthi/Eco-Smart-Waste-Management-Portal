@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Waste Classifier</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    padding: 30px;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('Image_predict_bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    filter: blur(8px);
+    z-index: -1;
+}
+
+        h1 {
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .option-box {
+    background: rgba(255, 255, 255, 0.9); /* translucent white background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+        .custom-file-btn, button {
+            padding: 10px 20px;
+            background-color:#9d5cd6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .custom-file-btn:hover, button:hover {
+            background-color: #4d2f7a;
+        }
+
+        #preview {
+            display: block;
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #result {
+            font-size: 1.2em;
+            margin-top: 30px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .hidden-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Waste Image Prediction</h1>
+
+    <div class="main-container">
+
+        <!-- Upload Section -->
+        <div class="option-box">
+            <h3>Upload Image</h3>
+            <label for="fileInput" class="custom-file-btn">Choose File</label>
+            <input type="file" id="fileInput" accept="image/*" class="hidden-input">
+        </div>
+
+        <!-- Preview & Predict -->
+        <div class="option-box">
+            <h3>Preview</h3>
+            <img id="preview" src="" alt="Selected image will appear here" />
+            <button id="predictBtn">Predict</button>
+        </div>
+
+    </div>
+
+    <!-- Prediction Result -->
+    <p id="result"></p>
+
+    <!-- Back Button -->
+    <div class="back-btn">
+        <a href="http://localhost/Main_Page/HOME_PAGE.html">
+            <button>⬅ Back</button>
+        </a>
+    </div>
+
+    <script>
+        const preview = document.getElementById('preview');
+        const resultEl = document.getElementById('result');
+        const predictBtn = document.getElementById('predictBtn');
+        const fileInput = document.getElementById('fileInput');
+
+        // Show image preview when file is selected
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Send image to backend for prediction
+        predictBtn.addEventListener('click', async () => {
+            if (!preview.src) {
+                resultEl.innerText = 'Please select an image first.';
+                return;
+            }
+
+            let formData = new FormData();
+
+            if (fileInput.files.length > 0) {
+                formData.append('file', fileInput.files[0]);
+            } else {
+                resultEl.innerText = 'No image selected.';
+                return;
+            }
+
+            resultEl.innerText = 'Predicting...';
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                resultEl.innerText = 'Prediction: ' + data.prediction;
+            } catch (err) {
+                resultEl.innerText = 'Prediction failed: ' + err.message;
+            }
+        });
+    </script>
+</body>
+</html>
