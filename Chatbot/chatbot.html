@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoChat - Waste Management Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+body {
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  background-image: url("chatbot_bg.png");
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  overflow-x: hidden;
+}
+
+/* White translucent blur overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6); /* white with opacity */
+  backdrop-filter: blur(3px); /* blur the background behind */
+  -webkit-backdrop-filter: blur(3px); /* Safari support */
+  z-index: -1;
+}
+
+
+    .chat-container {
+      height: 70vh;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .bot-message {
+      background-color: rgba(255, 255, 255, 0.85);
+      border-left: 4px solid #10b981;
+    }
+
+    .user-message {
+      background-color: rgba(209, 250, 229, 0.9);
+      border-right: 4px solid #047857;
+    }
+
+    .typing-indicator span {
+      animation: blink 1.4s infinite both;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.25s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes blink {
+      0% { opacity: 0.1; }
+      50% { opacity: 1; }
+      100% { opacity: 0.1; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <div class="container mx-auto px-4 py-8 flex-grow flex flex-col max-w-4xl">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center">
+        <div class="bg-green-600 p-3 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <h1 class="text-3xl font-bold ml-3 text-green-800">EcoChat</h1>
+      </div>
+      <button id="backButton" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </button>
+    </div>
+
+    <div class="bg-white bg-opacity-80 rounded-xl shadow-lg p-4 mb-4 flex-grow flex flex-col">
+      <div class="chat-container mb-4 flex-grow" id="chatContainer">
+        <div class="bot-message p-4 rounded-lg mb-4 shadow-sm">
+          <div class="flex items-start">
+            <div class="bg-green-100 p-2 rounded-full mr-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+            </div>
+            <div>
+              <p class="font-medium text-green-800">EcoChat</p>
+              <p class="text-gray-700">Hello! I'm EcoChat, your eco-friendly waste management assistant.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center">
+        <input type="text" id="userInput" placeholder="Ask about waste management..." class="flex-grow p-3 border rounded-l-lg"/>
+        <button id="sendButton" class="bg-green-600 hover:bg-green-700 text-white p-3 rounded-r-lg transition-colors duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="text-center text-green-800 text-sm">
+      <p>© 2023 EcoChat - Promoting sustainable waste management practices</p>
+    </div>
+  </div>
+
+  <script>
+    const chatContainer = document.getElementById('chatContainer');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+    const backButton = document.getElementById('backButton');
+
+    const knowledgeBase = {
+      "waste management": "Waste management is the collection, transportation, and disposal of garbage, sewage, and other waste products.",
+      "recycling": "Recycling is the process of converting waste materials into new materials and objects.",
+      "composting": "Composting is a natural process that transforms organic waste into valuable fertilizer.",
+      "waste segregation": "Waste segregation is the process of separating different types of waste at the source.",
+      "landfill": "Landfills are engineered sites where waste is isolated from the environment until it is safe.",
+      "zero waste": "Zero waste is a philosophy and design principle that encourages the redesign of resource life cycles so that all products are reused.",
+      "plastic pollution": "Plastic pollution is the accumulation of plastic objects and particles in the environment.",
+      "e-waste": "Electronic waste or e-waste refers to discarded electrical or electronic devices.",
+      "circular economy": "The circular economy is an economic system aimed at eliminating waste and continual resource use.",
+      "biodegradable": "Biodegradable materials are substances that can be broken down by microorganisms into natural elements.",
+      "waste reduction": "Waste reduction, also known as source reduction or waste prevention, focuses on reducing waste generation at the source.",
+      "hazardous waste": "Hazardous waste refers to waste that poses substantial or potential threats to public health or the environment.",
+      "environmental impact": "The environmental impact of waste extends far beyond visible litter and includes pollution of air, water, and soil.",
+      "sustainable waste management": "Sustainable waste management integrates environmental, social, and economic goals in managing waste.",
+      "waste to energy": "Waste-to-energy (WTE) refers to various technologies that convert non-recyclable waste materials into usable forms of energy.",
+      "ocean pollution": "Ocean pollution from waste, particularly plastics, has reached critical levels globally, threatening marine life.",
+      "waste audit": "A waste audit is a systematic analysis of an organization’s or household’s waste stream to identify types and quantities of waste generated.",
+      "waste awareness": "Waste awareness involves educating individuals, communities, and organizations about waste impacts and sustainable practices.",
+      "default": "Waste management is a critical environmental issue that encompasses the collection, transport, treatment, and disposal of waste."
+    };
+
+    const wasteKeywords = {
+      "trash": "waste management",
+      "garbage": "waste management",
+      "rubbish": "waste management",
+      "litter": "waste management",
+      "junk": "waste management",
+      "recycle": "recycling",
+      "recyclable": "recycling",
+      "compost": "composting",
+      "compostable": "composting",
+      "organic waste": "composting",
+      "food waste": "composting",
+      "green waste": "composting",
+      "separate": "waste segregation",
+      "sorting": "waste segregation",
+      "segregation": "waste segregation",
+      "categorize": "waste segregation",
+      "dump": "landfill",
+      "dumping": "landfill",
+      "disposal site": "landfill",
+      "no waste": "zero waste",
+      "waste free": "zero waste",
+      "plastic": "plastic pollution",
+      "electronics": "e-waste",
+      "electronic waste": "e-waste",
+      "old computers": "e-waste",
+      "old phones": "e-waste",
+      "circular": "circular economy",
+      "reuse": "circular economy",
+      "repurpose": "circular economy",
+      "decompose": "biodegradable",
+      "decomposition": "biodegradable",
+      "break down": "biodegradable",
+      "reduce": "waste reduction",
+      "minimizing": "waste reduction",
+      "minimize": "waste reduction",
+      "prevention": "waste reduction",
+      "dangerous waste": "hazardous waste",
+      "toxic waste": "hazardous waste",
+      "chemical waste": "hazardous waste",
+      "environmental": "environmental impact",
+      "ecology": "environmental impact",
+      "eco-friendly": "environmental impact",
+      "sustainable": "sustainable waste management",
+      "sustainability": "sustainable waste management",
+      "energy from waste": "waste to energy",
+      "incineration": "waste to energy",
+      "burning": "waste to energy",
+      "burning waste": "waste to energy",
+      "ocean": "ocean pollution",
+      "marine": "ocean pollution",
+      "sea": "ocean pollution",
+      "beach": "ocean pollution",
+      "audit": "waste audit",
+      "analysis": "waste audit",
+      "assessment": "waste audit",
+      "awareness": "waste awareness",
+      "education": "waste awareness",
+      "information": "waste awareness"
+    };
+
+    function addMessage(message, isUser = false) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = isUser
+        ? 'user-message p-4 rounded-lg mb-4 shadow-sm ml-12'
+        : 'bot-message p-4 rounded-lg mb-4 shadow-sm mr-12';
+
+      const content = isUser
+        ? `
+        <div class="flex items-start justify-end">
+          <div>
+            <p class="font-medium text-green-800 text-right">You</p>
+            <p class="text-gray-700">${message}</p>
+          </div>
+          <div class="bg-green-600 p-2 rounded-full ml-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+        </div>`
+        : `
+        <div class="flex items-start">
+          <div class="bg-green-100 p-2 rounded-full mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2z" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-medium text-blue-800">EcoChat</p>
+            <p class="text-gray-700">${message}</p>
+          </div>
+        </div>`;
+
+      messageDiv.innerHTML = content;
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'bot-message p-4 rounded-lg mb-4 shadow-sm typing-indicator';
+      typingDiv.id = 'typingIndicator';
+
+      typingDiv.innerHTML = `
+        <div class="flex items-start">
+          <div class="bg-green-100 p-2 rounded-full mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-medium text-green-800">EcoChat</p>
+            <p class="text-gray-700">
+              <span class="inline-block h-2 w-2 bg-green-600 rounded-full mr-1"></span>
+              <span class="inline-block h-2 w-2 bg-green-600 rounded-full mr-1"></span>
+              <span class="inline-block h-2 w-2 bg-green-600 rounded-full"></span>
+            </p>
+          </div>
+        </div>`;
+      chatContainer.appendChild(typingDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typingIndicator');
+      if (indicator) indicator.remove();
+    }
+
+    function getBotResponse(message) {
+      message = message.toLowerCase();
+      for (const [key, value] of Object.entries(knowledgeBase)) {
+        if (message.includes(key)) return value;
+      }
+      for (const [key, topic] of Object.entries(wasteKeywords)) {
+        if (message.includes(key)) return knowledgeBase[topic];
+      }
+      if (message.includes("waste") || message.includes("eco") || message.includes("recycle")) {
+        return knowledgeBase["default"];
+      }
+      return "I'm specialized in waste management and environmental topics. Could you please ask me something related?";
+    }
+
+    function handleUserInput() {
+      const message = userInput.value.trim();
+      if (message === '') return;
+      addMessage(message, true);
+      userInput.value = '';
+      addTypingIndicator();
+      setTimeout(() => {
+        removeTypingIndicator();
+        const botReply = getBotResponse(message);
+        addMessage(botReply);
+      }, 1200);
+    }
+
+    sendButton.addEventListener('click', handleUserInput);
+    userInput.addEventListener('keypress', e => { if (e.key === 'Enter') handleUserInput(); });
+    backButton.addEventListener('click', () => {
+      window.location.href = 'http://localhost/Main_Page/HOME_PAGE.html';
+      });
+  </script>
+</body>
+</html>
