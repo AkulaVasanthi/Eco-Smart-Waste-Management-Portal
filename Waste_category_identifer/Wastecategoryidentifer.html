@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Waste Category Identifier</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-image: 
+        linear-gradient(rgba(176, 148, 221, 0.5), rgba(210, 214, 211, 0.5)),
+        url("waste_category_identifier(img).jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      color: #333;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+      font-weight: 600;
+      font-size: 2.2em;
+    }
+
+    input[type="text"] {
+      padding: 14px 20px;
+      margin: 15px 0;
+      font-size: 1.1em;
+      width: calc(100% - 40px);
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #2193b0;
+      box-shadow: 0 0 0 3px rgba(33, 147, 176, 0.2);
+    }
+
+    button {
+      padding: 14px 30px;
+      font-size: 1.1em;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+      display: block;
+      margin: 10px auto;
+    }
+
+    #identifyButton {
+      background-color: #28a745;
+    }
+
+    #identifyButton:hover {
+      background-color: #218838;
+    }
+
+    #backButton {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 18px;
+      font-size: 0.9em;
+      background-color: #62429d;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 3px 8px rgba(141, 64, 186, 0.15);
+    }
+
+    #backButton:hover {
+      background-color: #702fb6;
+      transform: translateY(-1px);
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 1.2em;
+      font-weight: 600;
+      width: calc(100% - 40px);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideIn 0.5s forwards;
+    }
+
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .Recyclable {
+      background-color: #e6ffe6;
+      color: #1a6d2f;
+      border: 1px solid #a3e0b3;
+    }
+
+    .Organic {
+      background-color: #fffacd;
+      color: #8a6d00;
+      border: 1px solid #e0c88f;
+    }
+
+    .Hazardous {
+      background-color: #ffe6e6;
+      color: #8c1e21;
+      border: 1px solid #e0a3a3;
+    }
+
+    .General {
+      background-color: #e9ecef;
+      color: #495057;
+      border: 1px solid #c9d0d6;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px;
+        margin: 0 15px;
+      }
+
+      h1 {
+        font-size: 1.8em;
+      }
+
+      input, button, #backButton {
+        width: calc(100% - 30px);
+        display: block;
+        text-align: center;
+      }
+
+      .result {
+        width: calc(100% - 40px);
+        font-size: 1.1em;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Waste Category Identifier</h1>
+    <input type="text" id="wasteInput" placeholder="Enter a waste item (e.g., banana peel)">
+    
+    <!-- Identify Button -->
+    <button id="identifyButton" onclick="identifyCategory()">Identify Category</button>
+
+    <!-- Result will dynamically push the back button downward -->
+    <div id="result" class="result" style="display: none;"></div>
+
+    <!-- Back Button appears below result -->
+    <a href="http://localhost/Main_Page/HOME_PAGE.html" id="backButton">⬅ Back</a>
+
+  </div>
+
+  <script>
+    const categories = {
+      Recyclable: ['plastic', 'bottle', 'glass', 'can', 'cardboard', 'paper', 'metal', 'jar', 'newspaper'],
+      Organic: ['banana', 'apple', 'peel', 'egg', 'food', 'leftover', 'vegetable', 'fruit', 'core', 'bones', 'coffee grounds', 'tea bags', 'compost'],
+      Hazardous: ['battery', 'paint', 'chemical', 'medicine', 'thermometer', 'broken phone', 'electronic', 'bulb', 'oil', 'pesticide'],
+      General: ['tissue', 'diaper', 'styrofoam', 'clothes', 'wrapper', 'towel', 'chip bag', 'plastic bag (non-recyclable)', 'ceramics', 'dirty paper', 'ashes']
+    };
+
+    function identifyCategory() {
+      const input = document.getElementById("wasteInput").value.toLowerCase().trim();
+      let category = "General";
+      let foundMatch = false;
+      const resultDiv = document.getElementById("result");
+
+      if (input === "") {
+        resultDiv.className = `result General`;
+        resultDiv.innerText = `Please enter a waste item.`;
+        resultDiv.style.display = "block";
+        resultDiv.style.opacity = "1";
+        resultDiv.style.transform = "translateY(0)";
+        return;
+      }
+
+      for (let key in categories) {
+        for (let keyword of categories[key]) {
+          if (input.includes(keyword)) {
+            category = key;
+            foundMatch = true;
+            break;
+          }
+        }
+        if (foundMatch) break;
+      }
+
+      resultDiv.className = `result ${category}`;
+      resultDiv.innerText = `🗑️ Category: ${category}`;
+      resultDiv.style.display = "block";
+      resultDiv.style.opacity = "0";
+      resultDiv.style.transform = "translateY(20px)";
+      void resultDiv.offsetWidth;
+      resultDiv.style.opacity = "1";
+      resultDiv.style.transform = "translateY(0)";
+    }
+
+    // Enter key support
+    document.getElementById("wasteInput").addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        identifyCategory();
+      }
+    });
+  </script>
+
+</body>
+</html>
