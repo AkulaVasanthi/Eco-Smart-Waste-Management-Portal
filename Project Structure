@@ -9,16 +9,48 @@ FOLDER_NAME/
 |── Login_Page.html
 |── login_account.php
 |── HOME_PAGE.html
+|
 |── Learn_Waste_Segregation/
 │     ├── Learn_Waste_Segregation_bg.jpg
 │     ├── LearnWasteSegregation.html
 │
 │── Image_predict/
-│     ├── garbage_classification/
-|            ├──
-│     ├── login.php
-│     ├── forgot_password.html
+│   ├── image_predict.html               # Frontend HTML file for image upload 
+│   ├── image_predict.py                 # Main Python script (Flask-based)
+│   ├── image_predict.ipynb              # Jupyter notebook version of the main script
+│   ├── Image_predict_bg.jpg             # Background image 
+│   ├── flask_coros_install.ipynb        #  Flask installation
+│   ├── waste_classifier_model.keras     # Trained CNN model saved in Keras format
+│   └── garabage_classification/         # dataset(from kaggle)
+│       ├── train/                       # Training dataset
+│       │   ├── cardboard/              # Cardboard images
+│       │   ├── glass/                  # Glass images
+│       │   ├── metal/                  # Metal images
+│       │   ├── paper/                  # Paper images
+│       │   ├── plastic/                # Plastic images
+│       │   └── trash/                  # Trash images
+│       └── test/                        # Testing dataset
+│           ├── cardboard/
+│           ├── glass/
+│           ├── metal/
+│           ├── paper/
+│           ├── plastic/
+│           └── trash/
+|  
+|── Waste_category_identifer/
+│     ├── waste_category_identifier(img).jpg
+│     ├── Wastecategoryidentifer.html
 │
-│── learn_waste_segregation/
-│     ├── learn_waste_segregation.html
-│     ├── image.png
+|── Chatbot/
+│     ├── chatbot.html
+│     ├── chatbot_bg.png
+|
+│── quiz_game/
+│     ├── quiz.html
+│     ├── quiz_bg.png
+|
+│── register_complaint/
+│     ├── Register_complaint.html
+│     ├── submit_complaint.php
+
+NOTE: the background images are no need to keep exact it is optional
