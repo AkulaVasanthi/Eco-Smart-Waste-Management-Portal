@@ -1,1 +1,24 @@
 # PROJECT STRUCTURE
+
+EXAMPLE 
+
+FOLDER_NAME/
+|── get_started.html
+│── create_account_page.html
+|── create_account.php
+|── Login_Page.html
+|── login_account.php
+|── HOME_PAGE.html
+|── Learn_Waste_Segregation/
+│     ├── Learn_Waste_Segregation_bg.jpg
+│     ├── LearnWasteSegregation.html
+│
+│── Image_predict/
+│     ├── garbage_classification/
+|            ├──
+│     ├── login.php
+│     ├── forgot_password.html
+│
+│── learn_waste_segregation/
+│     ├── learn_waste_segregation.html
+│     ├── image.png
