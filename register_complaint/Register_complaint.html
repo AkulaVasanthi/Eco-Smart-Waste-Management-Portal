@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register Your Complaint</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+    }
+
+    .left-panel {
+      background-color: #c89ef0;
+      width: 30%;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .left-panel img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    .left-panel h2 {
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .left-panel p {
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .right-panel {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    .category-options {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+
+    button {
+      background-color: #7946bb;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    button:hover {
+      background-color: #402183;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="left-panel">
+    <img src="https://cdn-icons-png.flaticon.com/512/565/565340.png" alt="Complaint Icon" />
+    <h2>Register Your Complain</h2>
+    <p>We would love to hear from you!</p>
+  </div>
+
+  <div class="right-panel">
+    <form action="submit_complaint.php" method="POST" enctype="multipart/form-data">
+
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="mobile">Mobile:</label>
+        <input type="text" id="mobile" name="mobile" placeholder="Enter your mobile" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+      </div>
+
+      <div class="form-group">
+        <label>Category:</label>
+        <div class="category-options">
+          <label><input type="checkbox" name="category[]" value="Organic" /> Organic</label>
+          <label><input type="checkbox" name="category[]" value="Inorganic" /> Inorganic</label>
+          <label><input type="checkbox" name="category[]" value="Metallic" /> Metallic</label>
+          <label><input type="checkbox" name="category[]" value="All" /> All</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+  <label for="location">Location:</label>
+  <input id="location-input" type="text" placeholder="Enter your location" />
+  <div id="map" style="width:100%;height:300px;margin-top:10px;"></div>
+  <input type="hidden" id="latitude" name="latitude" />
+  <input type="hidden" id="longitude" name="longitude" />
+</div>
+
+      <div class="form-group">
+        <label for="details">Enter Location Details:</label>
+        <textarea id="details" name="details" rows="3" placeholder="Enter Location details..." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="picture">Pictures:</label>
+        <input type="file" id="picture" name="picture" />
+      </div>
+
+      <div class="button-group">
+        <button type="submit">Register</button>
+        <button type="button" onclick="window.location.href='/Main_Page/HOME_PAGE.html'">⬅ Back</button>
+      </div>
+    </form>
+  </div>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBE-YXiOlyXLurELFzRFpJpZ2xlHrc0mzc&libraries=places"></script>
+<script>
+  let map;
+  let marker;
+
+  function initMap() {
+    // Default location
+    const defaultLocation = { lat: 17.6868, lng: 83.2185 }; // Visakhapatnam
+
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: defaultLocation,
+      zoom: 10,
+    });
+
+    marker = new google.maps.Marker({
+      position: defaultLocation,
+      map: map,
+      draggable: true
+    });
+
+    // Update hidden inputs initially
+    document.getElementById("latitude").value = marker.getPosition().lat();
+    document.getElementById("longitude").value = marker.getPosition().lng();
+
+    // When marker is dragged
+    marker.addListener("dragend", function () {
+      document.getElementById("latitude").value = marker.getPosition().lat();
+      document.getElementById("longitude").value = marker.getPosition().lng();
+    });
+
+    // Autocomplete for input
+    const input = document.getElementById("location-input");
+    const autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo("bounds", map);
+
+    autocomplete.addListener("place_changed", function () {
+      const place = autocomplete.getPlace();
+      if (!place.geometry) {
+        alert("No details available for input: '" + place.name + "'");
+        return;
+      }
+
+      // Center map to selected location
+      map.setCenter(place.geometry.location);
+      map.setZoom(15);
+
+      // Move marker
+      marker.setPosition(place.geometry.location);
+
+      // Update hidden inputs
+      document.getElementById("latitude").value = place.geometry.location.lat();
+      document.getElementById("longitude").value = place.geometry.location.lng();
+    });
+  }
+
+  window.onload = initMap;
+</script>
+
+  
+</body>
+</html>
